@@ -24,8 +24,8 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildMessageReactions,
-        GatewayIntentBits.DirectMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.DirectMessages
+        // Removed MessageContent intent as it's privileged and not needed for slash commands
     ],
     partials: [
         Partials.Message,

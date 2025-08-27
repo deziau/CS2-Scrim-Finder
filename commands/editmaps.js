@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -26,11 +26,10 @@ module.exports = {
                 .setDescription('List all available maps')),
 
     async execute(interaction, database) {
-        // Check if user is admin
-        const adminIds = process.env.ADMIN_IDS ? process.env.ADMIN_IDS.split(',') : [];
-        if (!adminIds.includes(interaction.user.id)) {
+        // Check if user has admin permissions
+        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
             await interaction.reply({ 
-                content: '❌ You do not have permission to use this command. Admin access required.', 
+                content: '❌ You need Administrator permissions to use this command.', 
                 ephemeral: true 
             });
             return;

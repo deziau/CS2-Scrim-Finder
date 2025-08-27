@@ -199,11 +199,14 @@ module.exports = {
                 );
 
             // Get the scrim channel
-            const scrimChannelId = process.env.SCRIM_CHANNEL_ID;
-            const scrimChannel = interaction.guild.channels.cache.get(scrimChannelId);
+            const scrimChannelId = await database.getSetting('SCRIM_CHANNEL_ID') || process.env.SCRIM_CHANNEL_ID;
+            const scrimChannel = scrimChannelId ? interaction.guild.channels.cache.get(scrimChannelId) : null;
             
             if (!scrimChannel) {
-                await interaction.followUp({ content: '❌ Scrim channel not found. Please contact an admin.', ephemeral: true });
+                await interaction.followUp({ 
+                    content: '❌ Scrim channel not configured. Please ask an admin to use `/setup channel #channel-name` to set it up.', 
+                    ephemeral: true 
+                });
                 return;
             }
 

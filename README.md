@@ -30,6 +30,7 @@ A comprehensive Discord bot designed to help CS2 teams find and coordinate scrim
 | `/scrimlist` | View all active scrim requests | Everyone |
 | `/profile view/edit` | Manage your team profile | Everyone |
 | `/alert on/off/status` | Manage scrim notifications | Everyone |
+| `/setup channel/info` | Configure bot settings | Admin Only |
 | `/editmaps add/remove/list` | Manage available maps | Admin Only |
 | `/scrimclear` | Manual cleanup of expired scrims | Admin Only |
 
@@ -69,8 +70,6 @@ A comprehensive Discord bot designed to help CS2 teams find and coordinate scrim
    DISCORD_TOKEN=your_bot_token_here
    CLIENT_ID=your_client_id_here
    GUILD_ID=your_guild_id_here
-   ADMIN_IDS=123456789012345678,987654321098765432
-   SCRIM_CHANNEL_ID=your_scrim_channel_id_here
    CLEANUP_INTERVAL=0 */6 * * *
    ```
 
@@ -83,6 +82,10 @@ A comprehensive Discord bot designed to help CS2 teams find and coordinate scrim
    ```bash
    npm start
    ```
+
+5. **Configure the Bot in Discord**
+   - Use `/setup channel #your-scrim-channel` to set where scrims will be posted
+   - Use `/setup info` to view current configuration
 
 ### Discord Bot Setup
 
@@ -125,9 +128,9 @@ The bot uses SQLite with the following tables:
 | `DISCORD_TOKEN` | Bot token from Discord | ✅ | - |
 | `CLIENT_ID` | Application ID from Discord | ✅ | - |
 | `GUILD_ID` | Server ID for guild commands | ❌ | - |
-| `ADMIN_IDS` | Comma-separated admin user IDs | ❌ | - |
-| `SCRIM_CHANNEL_ID` | Channel for scrim posts | ❌ | - |
 | `CLEANUP_INTERVAL` | Cron expression for cleanup | ❌ | `0 */6 * * *` |
+
+**Note:** Admin permissions are now handled via Discord Administrator role. The scrim channel can be set using `/setup channel` command.
 
 ### Default Maps
 The bot comes pre-configured with CS2 competitive maps:

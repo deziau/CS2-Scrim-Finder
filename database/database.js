@@ -57,6 +57,15 @@ class Database {
                 )
             `);
 
+            // Settings table for bot configuration
+            this.db.run(`
+                CREATE TABLE IF NOT EXISTS settings (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL,
+                    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            `);
+
             // Insert default CS2 competitive maps
             const defaultMaps = [
                 'Mirage', 'Dust2', 'Inferno', 'Cache', 'Overpass', 
@@ -230,6 +239,37 @@ class Database {
                     else resolve(rows.map(row => row.user_id));
                 }
             );
+        });
+    }
+
+    // Settings operations
+    setSetting(key, value) {
+        return new Promise((resolve, reject) => {
+            this.db.run(`
+                INSERT OR REPLACE INTO settings (key, value, updated_at)
+                VALUES (?, ?, CURRENT_TIMESTAMP)
+            `, [key, value], function(err) {
+                if (err) reject(err);
+                else resolve(this.changes);
+            });
+        });
+    }
+
+    getSetting(key) {
+        return new Promise((resolve, reject) => {
+            this.db.get('SELECT value FROM settings WHERE key = ?', [key], (err, row) => {
+                if (err) reject(err);
+                else resolve(row ? row.value : null);
+            });
+        });
+    }
+
+    getAllSettings() {
+        return new Promise((resolve, reject) => {
+            this.db.all('SELECT * FROM settings', (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
         });
     }
 

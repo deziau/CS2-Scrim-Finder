@@ -49,7 +49,7 @@ class CleanupService {
             console.log(`🗑️  Found ${expiredScrims.length} expired scrims to clean up`);
 
             // Get the scrim channel
-            const scrimChannelId = process.env.SCRIM_CHANNEL_ID;
+            const scrimChannelId = await this.database.getSetting('SCRIM_CHANNEL_ID') || process.env.SCRIM_CHANNEL_ID;
             if (!scrimChannelId) {
                 console.error('❌ SCRIM_CHANNEL_ID not configured, cannot perform cleanup');
                 this.isRunning = false;

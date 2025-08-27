@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -6,11 +6,10 @@ module.exports = {
         .setDescription('Manually cleanup expired or completed scrims (Admin only)'),
 
     async execute(interaction, database) {
-        // Check if user is admin
-        const adminIds = process.env.ADMIN_IDS ? process.env.ADMIN_IDS.split(',') : [];
-        if (!adminIds.includes(interaction.user.id)) {
+        // Check if user has admin permissions
+        if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
             await interaction.reply({ 
-                content: '❌ You do not have permission to use this command. Admin access required.', 
+                content: '❌ You need Administrator permissions to use this command.', 
                 ephemeral: true 
             });
             return;
@@ -88,8 +87,8 @@ module.exports = {
                 let errorCount = 0;
 
                 // Get the scrim channel
-                const scrimChannelId = process.env.SCRIM_CHANNEL_ID;
-                const scrimChannel = interaction.guild.channels.cache.get(scrimChannelId);
+                const scrimChannelId = await database.getSetting('SCRIM_CHANNEL_ID') || process.env.SCRIM_CHANNEL_ID;
+                const scrimChannel = scrimChannelId ? interaction.guild.channels.cache.get(scrimChannelId) : null;
 
                 for (const scrim of expiredScrims) {
                     try {

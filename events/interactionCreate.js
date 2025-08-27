@@ -1,4 +1,4 @@
-const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { Events, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
     name: Events.InteractionCreate,
@@ -318,10 +318,10 @@ module.exports = {
             }
 
             // Only allow the scrim creator or admins to mark as filled
-            const adminIds = process.env.ADMIN_IDS ? process.env.ADMIN_IDS.split(',') : [];
-            if (scrim.user_id !== interaction.user.id && !adminIds.includes(interaction.user.id)) {
+            const isAdmin = interaction.member.permissions.has(PermissionFlagsBits.Administrator);
+            if (scrim.user_id !== interaction.user.id && !isAdmin) {
                 await interaction.reply({ 
-                    content: '❌ Only the scrim creator or admins can mark this as filled.', 
+                    content: '❌ Only the scrim creator or administrators can mark this as filled.', 
                     ephemeral: true 
                 });
                 return;
@@ -374,10 +374,10 @@ module.exports = {
             }
 
             // Only allow the scrim creator or admins to cancel
-            const adminIds = process.env.ADMIN_IDS ? process.env.ADMIN_IDS.split(',') : [];
-            if (scrim.user_id !== interaction.user.id && !adminIds.includes(interaction.user.id)) {
+            const isAdmin = interaction.member.permissions.has(PermissionFlagsBits.Administrator);
+            if (scrim.user_id !== interaction.user.id && !isAdmin) {
                 await interaction.reply({ 
-                    content: '❌ Only the scrim creator or admins can cancel this scrim.', 
+                    content: '❌ Only the scrim creator or administrators can cancel this scrim.', 
                     ephemeral: true 
                 });
                 return;
