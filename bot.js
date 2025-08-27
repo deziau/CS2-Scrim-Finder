@@ -6,6 +6,7 @@ require('dotenv').config();
 // Import database and cleanup service
 const Database = require('./database/database');
 const CleanupService = require('./utils/cleanup');
+const { deployCommands } = require('./railway-deploy');
 
 // Validate required environment variables
 const requiredEnvVars = ['DISCORD_TOKEN', 'CLIENT_ID'];
@@ -115,8 +116,14 @@ process.on('SIGTERM', async () => {
     }
 });
 
-// Start the cleanup service when the bot is ready
-client.once('ready', () => {
+// Start the cleanup service and deploy commands when the bot is ready
+client.once('ready', async () => {
+    // Try to auto-deploy commands on Railway
+    if (process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT) {
+        console.log('\n🚀 Railway deployment detected - attempting to auto-deploy commands...');
+        await deployCommands();
+    }
+    
     cleanupService.start();
 });
 
