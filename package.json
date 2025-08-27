@@ -1,0 +1,22 @@
+{
+  "name": "cs2-scrim-bot",
+  "version": "1.0.0",
+  "description": "Discord bot for CS2 team scrimmage coordination",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "sqlite3": "^5.1.6",
+    "node-cron": "^3.0.3",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": ["discord", "bot", "cs2", "counter-strike", "scrim"],
+  "author": "CS2 Scrim Bot",
+  "license": "MIT"
+}
